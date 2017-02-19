@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
+import android.util.Pair
 import android.view.MotionEvent
 import android.view.View
 import android.widget.RelativeLayout
@@ -21,6 +22,8 @@ class RingsView : View {
     }
 
     private lateinit var paint: Paint
+    private lateinit var bubble:Bubble
+    private lateinit var bubble2:Bubble
 
     private fun init() {
         paint = Paint()
@@ -30,6 +33,7 @@ class RingsView : View {
         textPaint.style = Paint.Style.FILL
         textPaint.textSize = 50f
         textPaint.textAlign = Paint.Align.CENTER
+
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
@@ -58,6 +62,12 @@ class RingsView : View {
             ringList.add(Ring(x, y, START_FORWARD, radius + 15, 10, ContextCompat.getColor(context, R.color.paint2)))
             ringList.add(Ring(x, y, END_BACKWARD, radius, -10, ContextCompat.getColor(context, R.color.paint3)))
 
+            bubbleList.add(Bubble(300f,0f,x,y,50f))
+            bubbleList.add(Bubble(0f,300f,x,y,50f))
+            bubbleList.add(Bubble(0f,500f,x,y,50f))
+            bubbleList.add(Bubble(0f,600f,x,y,50f))
+
+
             ringsAnimator = RingsAnimator(ringList)
         }
     }
@@ -71,7 +81,6 @@ class RingsView : View {
                 if (event.x > measuredWidth / 2 - 150 && event.x < measuredWidth / 2 + 150 && event.y > measuredHeight / 2 - 150 && event.y < measuredHeight / 2 + 150) {
                     isFast = !isFast
                     ringsAnimator.velocity = if (isFast) 5 else 1
-                    textPaint.color = if (isFast) Color.RED else Color.WHITE
                 }
             }
         }
@@ -82,18 +91,22 @@ class RingsView : View {
     val textPaint = Paint()
 
     val ringList = mutableListOf<Ring>()
-    val radius = 250f
+    val bubbleList = mutableListOf<Bubble>()
+    val radius = 150f
 
     lateinit var ringsAnimator: RingsAnimator
 
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        bubbleList.forEach {
+            it.nextValue()
+            it.draw(canvas)
+        }
 
         ringsAnimator.nextValue()
         ringList.forEach { it.draw(canvas) }
 
-        canvas.drawCircle(measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), radius, paint)
+     //   canvas.drawCircle(measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), radius, paint)
         val xPos = canvas.width / 2.toFloat()
         val yPos = (canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2)
 
@@ -117,6 +130,39 @@ class RingsView : View {
                 val sin = Math.sin(Math.toRadians((value).toDouble()))
                 val cos = Math.cos(Math.toRadians((value).toDouble()))
                 it.move(sin.toFloat(), cos.toFloat())
+            }
+        }
+    }
+
+    class BubbleAnimator(val list: List<Bubble>) {
+        var velocity: Int = 1
+
+     //   private val range = Array(80, { calculateDistance(it) })
+        private val range = Array(80, { it })
+
+        private fun calculateDistance(value:Int,bubble:Bubble):Pair<Int,Int>{
+
+
+
+
+            return Pair(value,value)
+        }
+        private var index = 0
+
+
+
+        fun nextValue() {
+            val value: Int
+            if (index >= range.size - velocity) {
+                index = 0
+            } else {
+                index += velocity
+            }
+            value = range[index]
+            list.forEach {
+
+                val pairXY = calculateDistance(value, it)
+                it.move(pairXY.first.toFloat(), pairXY.second.toFloat())
             }
         }
     }

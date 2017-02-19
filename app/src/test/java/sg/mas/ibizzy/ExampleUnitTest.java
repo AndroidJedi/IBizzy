@@ -14,4 +14,26 @@ public class ExampleUnitTest {
     public void addition_isCorrect() throws Exception {
         assertEquals(4, 2 + 2);
     }
+
+
+    public double  fi;
+    public float  x = 360;
+    public float  y = 518;
+
+    @Test
+    public void cosinus() throws Exception {
+        fi = (x/y);
+
+        double cos = Math.cos(Math.toRadians(fi));
+        assertTrue(cos>0.99);
+    }
+
+    @Test
+    public void sinus() throws Exception {
+        double sin = Math.sin(Math.toRadians(fi));
+        assertTrue(sin<0.01);
+    }
+
+
+
 }
