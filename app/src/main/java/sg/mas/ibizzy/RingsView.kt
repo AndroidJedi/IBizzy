@@ -62,10 +62,17 @@ class RingsView : View {
             ringList.add(Ring(x, y, START_FORWARD, radius + 15, 10, ContextCompat.getColor(context, R.color.paint2)))
             ringList.add(Ring(x, y, END_BACKWARD, radius, -10, ContextCompat.getColor(context, R.color.paint3)))
 
-            bubbleList.add(Bubble(300f,0f,x,y,50f))
+            bubbleList.add(Bubble(300f,0f,x,y,25f))
             bubbleList.add(Bubble(0f,300f,x,y,50f))
-            bubbleList.add(Bubble(0f,500f,x,y,50f))
+            bubbleList.add(Bubble(0f,500f,x,y,30f))
             bubbleList.add(Bubble(0f,600f,x,y,50f))
+            bubbleList.add(Bubble(0f,800f,x,y,10f))
+            bubbleList.add(Bubble(0f,900f,x,y,35f))
+
+
+
+
+            bubbleList.add(Bubble(450f,0f,x,y,50f))
 
 
             ringsAnimator = RingsAnimator(ringList)

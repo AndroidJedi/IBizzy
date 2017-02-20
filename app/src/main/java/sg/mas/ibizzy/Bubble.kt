@@ -12,7 +12,7 @@ import android.util.Log
 
 class Bubble(startX: Float,
              startY: Float,
-             val centerX: Float,
+             centerX: Float,
              val centerY: Float,
              radius: Float) : Renderable(startX, startY, radius) {
 
@@ -32,12 +32,9 @@ class Bubble(startX: Float,
         val y = centerY - startY
         distanceFromStartToCenter = Math.sqrt((x * x + y * y).toDouble())
 
-        val angle = Math.sin(((y.toDouble() / distanceFromStartToCenter)))
-
-        //   fi = (y.toDouble() / distanceFromStartToCenter)*180.0 / Math.PI
         fi = Math.toDegrees(Math.asin(y.toDouble() / distanceFromStartToCenter))
-        //  Math.toDegrees(Math.asin(0.82))
-        // Math.toDegrees(Math.acos(0.57))
+
+
         Log.d(TAG, " distanceFromStartToCenter " + distanceFromStartToCenter)
 
     }
@@ -85,21 +82,15 @@ class Bubble(startX: Float,
         val k = (range.size - value).toFloat() / range.size
 
         val relativeDistance = distanceFromStartToCenter * (1 - k)
-
-        Log.d(TAG, " relativeDistance $relativeDistance value $value")
-
         val xR: Double
         val yR: Double
 
-        xR = Math.abs(relativeDistance * Math.cos(Math.toRadians(fi)))
+        xR = relativeDistance * Math.cos(Math.toRadians(fi))
 
-        yR = Math.abs(relativeDistance * Math.sin(Math.toRadians(fi)))
-
+        yR = relativeDistance * Math.sin(Math.toRadians(fi))
 
         return Pair(xR, yR)
     }
-
-    private val SQUARE: Double = 2.toDouble()
 
     override fun draw(canvas: Canvas) {
         val xp = startX + mX
