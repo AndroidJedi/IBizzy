@@ -64,7 +64,7 @@ class RingsView : View {
 
             bubbleList.add(Bubble(300f,0f,x,y,25f))
             bubbleList.add(Bubble(0f,300f,x,y,50f))
-            bubbleList.add(Bubble(0f,500f,x,y,30f))
+           bubbleList.add(Bubble(0f,500f,x,y,30f))
             bubbleList.add(Bubble(0f,600f,x,y,50f))
             bubbleList.add(Bubble(0f,800f,x,y,10f))
             bubbleList.add(Bubble(0f,900f,x,y,35f))
@@ -72,7 +72,10 @@ class RingsView : View {
 
 
 
-            bubbleList.add(Bubble(450f,0f,x,y,50f))
+            bubbleList.add(Bubble(450f,0f,x,y,15f))
+            bubbleList.add(Bubble(550f,600f,x,y,30f))
+            bubbleList.add(Bubble(650f,900f,x,y,40f))
+            bubbleList.add(Bubble(450f,100f,x,y,25f))
 
 
             ringsAnimator = RingsAnimator(ringList)

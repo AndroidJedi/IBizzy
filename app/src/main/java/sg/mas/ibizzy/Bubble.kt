@@ -12,7 +12,7 @@ import android.util.Log
 
 class Bubble(startX: Float,
              startY: Float,
-             centerX: Float,
+             val centerX: Float,
              val centerY: Float,
              radius: Float) : Renderable(startX, startY, radius) {
 
@@ -82,12 +82,14 @@ class Bubble(startX: Float,
         val k = (range.size - value).toFloat() / range.size
 
         val relativeDistance = distanceFromStartToCenter * (1 - k)
-        val xR: Double
-        val yR: Double
 
-        xR = relativeDistance * Math.cos(Math.toRadians(fi))
+        var xR = relativeDistance * Math.cos(Math.toRadians(fi))
 
-        yR = relativeDistance * Math.sin(Math.toRadians(fi))
+        val yR = relativeDistance * Math.sin(Math.toRadians(fi))
+        if(startX>centerX){
+            xR *= -1
+        }
+
 
         return Pair(xR, yR)
     }
