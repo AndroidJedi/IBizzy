@@ -22,8 +22,8 @@ class RingsView : View {
     }
 
     private lateinit var paint: Paint
-    private lateinit var bubble:Bubble
-    private lateinit var bubble2:Bubble
+    private lateinit var bubble: Bubble
+    private lateinit var bubble2: Bubble
 
     private fun init() {
         paint = Paint()
@@ -60,22 +60,28 @@ class RingsView : View {
 
             ringList.add(Ring(x, y, END_FORWARD, radius - 10, -10, ContextCompat.getColor(context, R.color.paint1)))
             ringList.add(Ring(x, y, START_FORWARD, radius + 15, 10, ContextCompat.getColor(context, R.color.paint2)))
+
+
             ringList.add(Ring(x, y, END_BACKWARD, radius, -10, ContextCompat.getColor(context, R.color.paint3)))
 
-            bubbleList.add(Bubble(300f,0f,x,y,25f))
-            bubbleList.add(Bubble(0f,300f,x,y,50f))
-           bubbleList.add(Bubble(0f,500f,x,y,30f))
-            bubbleList.add(Bubble(0f,600f,x,y,50f))
-            bubbleList.add(Bubble(0f,800f,x,y,10f))
-            bubbleList.add(Bubble(0f,900f,x,y,35f))
+
+            bubbleList.add(Bubble(300f, 0f, x, y, 25f,R.color.yellow))
+
+            bubbleList.add(Bubble(0f, 300f, x, y, 50f,R.color.violet))
+            bubbleList.add(Bubble(0f, 500f, x, y, 30f,R.color.red))
+            bubbleList.add(Bubble(0f, 600f, x, y, 50f,R.color.blue))
+            bubbleList.add(Bubble(0f, 800f, x, y, 10f,R.color.dark_green))
+            bubbleList.add(Bubble(0f, 900f, x, y, 35f,R.color.paint1))
 
 
 
 
-            bubbleList.add(Bubble(450f,0f,x,y,15f))
-            bubbleList.add(Bubble(550f,600f,x,y,30f))
-            bubbleList.add(Bubble(650f,900f,x,y,40f))
-            bubbleList.add(Bubble(450f,100f,x,y,25f))
+            bubbleList.add(Bubble(450f, 0f, x, y, 15f,R.color.green))
+
+
+            bubbleList.add(Bubble(measuredWidth.toFloat(), 600f, x, y, 30f,R.color.pink))
+            bubbleList.add(Bubble(measuredWidth.toFloat(), 900f, x, y, 40f,R.color.colorAccent))
+            bubbleList.add(Bubble(measuredWidth.toFloat(), 100f, x, y, 25f,R.color.someColor2))
 
 
             ringsAnimator = RingsAnimator(ringList)
@@ -91,6 +97,9 @@ class RingsView : View {
                 if (event.x > measuredWidth / 2 - 150 && event.x < measuredWidth / 2 + 150 && event.y > measuredHeight / 2 - 150 && event.y < measuredHeight / 2 + 150) {
                     isFast = !isFast
                     ringsAnimator.velocity = if (isFast) 5 else 1
+                    if(isFast){
+
+                    }
                 }
             }
         }
@@ -108,15 +117,24 @@ class RingsView : View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        bubbleList.forEach {
-            it.nextValue()
-            it.draw(canvas)
-        }
 
         ringsAnimator.nextValue()
         ringList.forEach { it.draw(canvas) }
 
-     //   canvas.drawCircle(measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), radius, paint)
+        if (isFast){
+            bubbleList.forEach {
+                it.nextValue()
+                it.draw(canvas)
+            }
+
+            Ricochet.check(bubbleList,ringList)
+        }
+
+
+
+        //   canvas.drawCircle(measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), radius, paint)
+
+
         val xPos = canvas.width / 2.toFloat()
         val yPos = (canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2)
 
@@ -147,18 +165,16 @@ class RingsView : View {
     class BubbleAnimator(val list: List<Bubble>) {
         var velocity: Int = 1
 
-     //   private val range = Array(80, { calculateDistance(it) })
+        //   private val range = Array(80, { calculateDistance(it) })
         private val range = Array(80, { it })
 
-        private fun calculateDistance(value:Int,bubble:Bubble):Pair<Int,Int>{
+        private fun calculateDistance(value: Int, bubble: Bubble): Pair<Int, Int> {
 
 
-
-
-            return Pair(value,value)
+            return Pair(value, value)
         }
-        private var index = 0
 
+        private var index = 0
 
 
         fun nextValue() {

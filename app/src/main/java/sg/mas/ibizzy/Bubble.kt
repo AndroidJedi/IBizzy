@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
+import android.support.v4.content.ContextCompat
 import android.util.Log
 
 /**
@@ -14,36 +15,37 @@ class Bubble(startX: Float,
              startY: Float,
              val centerX: Float,
              val centerY: Float,
-             radius: Float) : Renderable(startX, startY, radius) {
+             radius: Float,color:Int) : Renderable(startX, startY, radius) {
 
     private val TAG = Bubble::class.java.simpleName
 
     var paint: Paint
     var rectF: RectF
-    var fi: Double
+    var alpha: Double
     private var distanceFromStartToCenter: Double
 
     init {
         rectF = RectF()
         paint = Paint()
-        paint.color = Color.RED
+        paint.color = ContextCompat.getColor(MainActivity.context,color)
         paint.flags = Paint.ANTI_ALIAS_FLAG
-        val x = centerX - startX
-        val y = centerY - startY
+        val x = centerX - startX - radius*2
+        val y = centerY - startY - radius*2
         distanceFromStartToCenter = Math.sqrt((x * x + y * y).toDouble())
 
-        fi = Math.toDegrees(Math.asin(y.toDouble() / distanceFromStartToCenter))
+        alpha = Math.toDegrees(Math.asin(y.toDouble() / distanceFromStartToCenter))
 
 
         Log.d(TAG, " distanceFromStartToCenter " + distanceFromStartToCenter)
 
     }
 
-    private val range = Array(100, { it })
+    private val range = 100
+    // private val range = Array(100, { it })
     private var index = 0
     var velocity: Int = 1
     private var lastDraw: Long = System.currentTimeMillis()
-    private val timeDelay = 25L
+    private val timeDelay = 50L
 
     private fun timeDelay(): Boolean {
         val currentTime = System.currentTimeMillis()
@@ -55,23 +57,32 @@ class Bubble(startX: Float,
     }
 
     fun nextValue() {
-/*
+
         val draw = timeDelay()
 
         if (!draw) {
             return
-        }*/
+        }
+
+        if (moveToCenter) {
+            if (index >= range - velocity) {
+                index = 0
+            } else {
+                index += velocity
+            }
+        } else {
+            if (index <0) {
+                index = 0
+                moveToCenter = true
+            } else {
+                index -= velocity
+            }
+        }
 
         val value: Int
-        if (index >= range.size - velocity) {
-            index = 0
-        } else {
-            index += velocity
-        }
-        value = range[index]
-        val pairXY = calculateDistance(value)
 
-        Log.d(TAG, " x " + pairXY.x.toFloat() + " y " + pairXY.y.toFloat())
+        value = index
+        val pairXY = calculateDistance(value)
 
         move(pairXY.x.toFloat(), pairXY.y.toFloat())
     }
@@ -79,14 +90,14 @@ class Bubble(startX: Float,
 
     private fun calculateDistance(value: Int): Pair {
 
-        val k = (range.size - value).toFloat() / range.size
+        val k = (range - value).toFloat() / range
 
         val relativeDistance = distanceFromStartToCenter * (1 - k)
 
-        var xR = relativeDistance * Math.cos(Math.toRadians(fi))
+        var xR = relativeDistance * Math.cos(Math.toRadians(alpha))
 
-        val yR = relativeDistance * Math.sin(Math.toRadians(fi))
-        if(startX>centerX){
+        val yR = relativeDistance * Math.sin(Math.toRadians(alpha))
+        if (startX > centerX) {
             xR *= -1
         }
 
@@ -94,11 +105,20 @@ class Bubble(startX: Float,
         return Pair(xR, yR)
     }
 
+    var moveToCenter = true
+
     override fun draw(canvas: Canvas) {
         val xp = startX + mX
         val yp = startY + mY
         canvas.drawCircle(xp, yp, radius, paint)
     }
 
+    fun getX(): Float = startX + mX
+    fun getY(): Float = startY + mY
+
+    fun ricochet() {
+        Log.d(TAG, "ricochet")
+        moveToCenter = false
+    }
     data class Pair(val x: Double, val y: Double)
 }

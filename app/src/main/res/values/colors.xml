@@ -11,4 +11,19 @@
     <color name="paint88">#85AA1DDB</color>
     <color name="paint3">#85512DA8</color>
     <color name="paint4">#FFBB00</color>
+
+
+    <color name="yellow">#ffcc33</color>
+    <color name="dark_purple">#4d0054</color>
+    <color name="light_purple">#505f3e65</color>
+    <color name="pink">#FF00B1</color>
+    <color name="violet">#8729ff</color>
+    <color name="blue">#00a7ff</color>
+    <color name="dark_grey">#adb1bd</color>
+    <color name="venues_grey">#bfbfbf</color>
+    <color name="grey">#e6e8ed</color>
+    <color name="red">#ef493d</color>
+    <color name="green">#2df759</color>
+    <color name="dark_green">#0fa319</color>
+    <color name="orange">#ffaa16</color>
 </resources>
