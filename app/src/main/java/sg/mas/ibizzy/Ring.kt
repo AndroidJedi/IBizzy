@@ -2,9 +2,7 @@ package sg.mas.ibizzy
 
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Point
 import android.graphics.RectF
-import android.util.Pair
 
 /**
  * Created by Sergey on 31.01.17.

@@ -58,12 +58,12 @@ class Bubble(startX: Float,
 
     fun nextValue() {
 
-        val draw = timeDelay()
+      /*  val draw = timeDelay()
 
         if (!draw) {
             return
         }
-
+*/
         if (moveToCenter) {
             if (index >= range - velocity) {
                 index = 0

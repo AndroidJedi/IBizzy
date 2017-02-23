@@ -22,8 +22,6 @@ class RingsView : View {
     }
 
     private lateinit var paint: Paint
-    private lateinit var bubble: Bubble
-    private lateinit var bubble2: Bubble
 
     private fun init() {
         paint = Paint()
@@ -65,23 +63,23 @@ class RingsView : View {
             ringList.add(Ring(x, y, END_BACKWARD, radius, -10, ContextCompat.getColor(context, R.color.paint3)))
 
 
-            bubbleList.add(Bubble(300f, 0f, x, y, 25f,R.color.yellow))
+            /*  bubbleList.add(Bubble(300f, 0f, x, y, 25f,R.color.yellow))
 
-            bubbleList.add(Bubble(0f, 300f, x, y, 50f,R.color.violet))
-            bubbleList.add(Bubble(0f, 500f, x, y, 30f,R.color.red))
-            bubbleList.add(Bubble(0f, 600f, x, y, 50f,R.color.blue))
-            bubbleList.add(Bubble(0f, 800f, x, y, 10f,R.color.dark_green))
-            bubbleList.add(Bubble(0f, 900f, x, y, 35f,R.color.paint1))
-
-
+              bubbleList.add(Bubble(0f, 300f, x, y, 50f,R.color.violet))
+              bubbleList.add(Bubble(0f, 500f, x, y, 30f,R.color.red))
+              bubbleList.add(Bubble(0f, 600f, x, y, 50f,R.color.blue))
+              bubbleList.add(Bubble(0f, 800f, x, y, 10f,R.color.dark_green))
+              bubbleList.add(Bubble(0f, 900f, x, y, 35f,R.color.paint1))
 
 
-            bubbleList.add(Bubble(450f, 0f, x, y, 15f,R.color.green))
 
 
-            bubbleList.add(Bubble(measuredWidth.toFloat(), 600f, x, y, 30f,R.color.pink))
-            bubbleList.add(Bubble(measuredWidth.toFloat(), 900f, x, y, 40f,R.color.colorAccent))
-            bubbleList.add(Bubble(measuredWidth.toFloat(), 100f, x, y, 25f,R.color.someColor2))
+              bubbleList.add(Bubble(450f, 0f, x, y, 15f,R.color.green))
+
+
+              bubbleList.add(Bubble(measuredWidth.toFloat(), 600f, x, y, 30f,R.color.pink))
+              bubbleList.add(Bubble(measuredWidth.toFloat(), 900f, x, y, 40f,R.color.colorAccent))
+              bubbleList.add(Bubble(measuredWidth.toFloat(), 100f, x, y, 25f,R.color.someColor2))*/
 
 
             ringsAnimator = RingsAnimator(ringList)
@@ -97,8 +95,49 @@ class RingsView : View {
                 if (event.x > measuredWidth / 2 - 150 && event.x < measuredWidth / 2 + 150 && event.y > measuredHeight / 2 - 150 && event.y < measuredHeight / 2 + 150) {
                     isFast = !isFast
                     ringsAnimator.velocity = if (isFast) 5 else 1
-                    if(isFast){
+                    if (isFast) {
+                        bubbleList.add(Bubble(300f, 0f - 25f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 25f, R.color.yellow))
 
+                        bubbleList.add(Bubble(0f - 50f, 300f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 50f, R.color.violet))
+                        bubbleList.add(Bubble(0f - 30f, 500f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 30f, R.color.red))
+
+                        bubbleList.add(Bubble(0f - 50f, 600f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 50f, R.color.blue))
+                        bubbleList.add(Bubble(0f - 10f, 800f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 10f, R.color.dark_green))
+                        bubbleList.add(Bubble(0f - 35f, 900f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 35f, R.color.paint1))
+
+
+                        bubbleList.add(Bubble(measuredWidth .toFloat(), 0f - 55f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 55f, R.color.blue))
+
+
+
+
+                        bubbleList.add(Bubble(450f, 0f - 15f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 15f, R.color.green))
+
+                        bubbleList.add(Bubble(measuredWidth.toFloat() + 30f, 600f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 30f, R.color.pink))
+                        bubbleList.add(Bubble(measuredWidth.toFloat() + 40f, measuredHeight.toFloat(), measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 40f, R.color.colorAccent))
+                        bubbleList.add(Bubble(measuredWidth.toFloat() + 25f, 100f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 25f, R.color.someColor2))
+/////
+
+                        bubbleList.add(Bubble(400f, measuredHeight.toFloat() + 25f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 25f, R.color.violet))
+
+                        bubbleList.add(Bubble(100f, measuredHeight.toFloat() + 50f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 50f, R.color.yellow))
+
+                        bubbleList.add(Bubble(700f, measuredHeight.toFloat() + 30f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 30f, R.color.blue))
+                        bubbleList.add(Bubble(850f, measuredHeight.toFloat() + 50f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 50f, R.color.red))
+
+                        bubbleList.add(Bubble(measuredWidth.toFloat() + 10f, 730f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 10f, R.color.paint1))
+                        bubbleList.add(Bubble(measuredWidth.toFloat() + 35f, 1100f, measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 35f, R.color.dark_green))
+
+
+/*
+                         bubbleList.add(Bubble(measuredWidth.toFloat()+15f, 550f,  measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 15f,R.color.green))
+
+
+                         bubbleList.add(Bubble(measuredWidth.toFloat()+30f, 300f,  measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 30f,R.color.pink))
+                         bubbleList.add(Bubble(measuredWidth.toFloat()+40f, 400f,  measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 40f,R.color.someColor2))
+                         bubbleList.add(Bubble(measuredWidth.toFloat()+25f, 333f,  measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), 25f,R.color.colorAccent))*/
+                    } else {
+                        bubbleList.clear()
                     }
                 }
             }
@@ -111,7 +150,7 @@ class RingsView : View {
 
     val ringList = mutableListOf<Ring>()
     val bubbleList = mutableListOf<Bubble>()
-    val radius = 150f
+    val radius = 200f
 
     lateinit var ringsAnimator: RingsAnimator
 
@@ -121,15 +160,14 @@ class RingsView : View {
         ringsAnimator.nextValue()
         ringList.forEach { it.draw(canvas) }
 
-        if (isFast){
+        if (isFast) {
             bubbleList.forEach {
                 it.nextValue()
                 it.draw(canvas)
             }
 
-            Ricochet.check(bubbleList,ringList)
+            Ricochet.check(bubbleList, ringList)
         }
-
 
 
         //   canvas.drawCircle(measuredWidth / 2.toFloat(), measuredHeight / 2.toFloat(), radius, paint)
