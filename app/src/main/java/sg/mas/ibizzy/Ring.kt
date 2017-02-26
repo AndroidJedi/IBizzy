@@ -33,7 +33,7 @@ open class Ring(startX: Float,
     }
 
 
-    fun contains(b: Bubble):Boolean {
+    fun intersects(b: Bubble):Boolean {
         val distance = Math.sqrt(((xp - b.getX()) * (xp - b.getX()) + (yp - b.getY()) * (yp - b.getY())).toDouble())
         if (Math.abs(radius - b.radius) <= distance && distance <= radius + b.radius) {
             return true

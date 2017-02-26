@@ -6,44 +6,53 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import sg.mas.ibizzy.BubbleInitializer.*
 
 /**
  * Created by Sergey on 14.02.17.
  */
 
-class Bubble(startX: Float,
-             startY: Float,
-             val centerX: Float,
-             val centerY: Float,
-             radius: Float,color:Int) : Renderable(startX, startY, radius) {
+class Bubble(side: BubbleInitializer.Side, val radius: Float, color: Int) {
 
     private val TAG = Bubble::class.java.simpleName
 
-    var paint: Paint
-    var rectF: RectF
-    var alpha: Double
+
+    private var mX = 0f
+    private var mY = 0f
+
+    private var paint: Paint
+    private var rectF: RectF
+    private var alpha: Double
     private var distanceFromStartToCenter: Double
+    private var startY: Float
+    private var startX: Float
 
     init {
         rectF = RectF()
         paint = Paint()
-        paint.color = ContextCompat.getColor(MainActivity.context,color)
+        paint.color = ContextCompat.getColor(MainActivity.context, color)
         paint.flags = Paint.ANTI_ALIAS_FLAG
-        val x = centerX - startX - radius*2
-        val y = centerY - startY - radius*2
+
+        startX = BubbleInitializer.instance.getX(side)
+        startY = BubbleInitializer.instance.getY(side)
+
+        when (side) {
+            Side.LEFT -> startX -= radius
+            Side.RIGHT -> startX += radius
+            Side.TOP -> startY -= radius
+            Side.BOTTOM -> startY += radius
+        }
+
+        val x = BubbleInitializer.centerX - startX
+        val y = BubbleInitializer.centerY - startY
         distanceFromStartToCenter = Math.sqrt((x * x + y * y).toDouble())
-
         alpha = Math.toDegrees(Math.asin(y.toDouble() / distanceFromStartToCenter))
-
-
-        Log.d(TAG, " distanceFromStartToCenter " + distanceFromStartToCenter)
-
     }
 
+
     private val range = 100
-    // private val range = Array(100, { it })
     private var index = 0
-    var velocity: Int = 1
+    private var velocity: Int = 1
     private var lastDraw: Long = System.currentTimeMillis()
     private val timeDelay = 50L
 
@@ -57,13 +66,11 @@ class Bubble(startX: Float,
     }
 
     fun nextValue() {
-
-      /*  val draw = timeDelay()
-
-        if (!draw) {
-            return
-        }
-*/
+        /*
+          if (!timeDelay()) {
+              return
+          }
+  */
         if (moveToCenter) {
             if (index >= range - velocity) {
                 index = 0
@@ -71,7 +78,7 @@ class Bubble(startX: Float,
                 index += velocity
             }
         } else {
-            if (index <0) {
+            if (index < 0) {
                 index = 0
                 moveToCenter = true
             } else {
@@ -79,35 +86,22 @@ class Bubble(startX: Float,
             }
         }
 
-        val value: Int
-
-        value = index
-        val pairXY = calculateDistance(value)
-
-        move(pairXY.x.toFloat(), pairXY.y.toFloat())
-    }
-
-
-    private fun calculateDistance(value: Int): Pair {
-
-        val k = (range - value).toFloat() / range
+        val k = (range - index).toFloat() / range
 
         val relativeDistance = distanceFromStartToCenter * (1 - k)
 
         var xR = relativeDistance * Math.cos(Math.toRadians(alpha))
-
         val yR = relativeDistance * Math.sin(Math.toRadians(alpha))
-        if (startX > centerX) {
+        if (startX > BubbleInitializer.centerX) {
             xR *= -1
         }
-
-
-        return Pair(xR, yR)
+        this.mX = xR.toFloat()
+        this.mY = yR.toFloat()
     }
 
     var moveToCenter = true
 
-    override fun draw(canvas: Canvas) {
+    fun draw(canvas: Canvas) {
         val xp = startX + mX
         val yp = startY + mY
         canvas.drawCircle(xp, yp, radius, paint)
@@ -117,8 +111,6 @@ class Bubble(startX: Float,
     fun getY(): Float = startY + mY
 
     fun ricochet() {
-        Log.d(TAG, "ricochet")
         moveToCenter = false
     }
-    data class Pair(val x: Double, val y: Double)
 }
