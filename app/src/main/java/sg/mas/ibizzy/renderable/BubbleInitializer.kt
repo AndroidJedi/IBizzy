@@ -1,6 +1,6 @@
 package sg.mas.ibizzy.renderable
 
-import sg.mas.ibizzy.renderable.MathHelper
+import sg.mas.ibizzy.renderable.helpers.MathHelper
 
 /**
  * Created by Sergey on 25.02.17.

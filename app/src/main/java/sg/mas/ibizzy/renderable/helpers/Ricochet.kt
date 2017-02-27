@@ -1,4 +1,7 @@
-package sg.mas.ibizzy.renderable
+package sg.mas.ibizzy.renderable.helpers
+
+import sg.mas.ibizzy.renderable.Bubble
+import sg.mas.ibizzy.renderable.Ring
 
 /**
  * Created by Sergey on 23.02.17.

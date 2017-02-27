@@ -1,4 +1,4 @@
-package sg.mas.ibizzy.renderable;
+package sg.mas.ibizzy.renderable.helpers;
 
 import java.util.Random;
 

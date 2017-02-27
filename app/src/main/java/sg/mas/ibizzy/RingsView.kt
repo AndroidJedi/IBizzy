@@ -13,7 +13,7 @@ import sg.mas.ibizzy.renderable.Ring.DIRECTION.*
 import sg.mas.ibizzy.renderable.BubbleInitializer.*
 import sg.mas.ibizzy.renderable.Bubble
 import sg.mas.ibizzy.renderable.BubbleInitializer
-import sg.mas.ibizzy.renderable.Ricochet
+import sg.mas.ibizzy.renderable.helpers.Ricochet
 import sg.mas.ibizzy.renderable.Ring
 import java.util.*
 
