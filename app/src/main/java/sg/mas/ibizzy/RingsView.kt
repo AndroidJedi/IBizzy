@@ -1,74 +1,72 @@
 package sg.mas.ibizzy
+
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.RectF
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
-import android.util.Pair
 import android.view.MotionEvent
 import android.view.View
 import android.widget.RelativeLayout
-import sg.mas.ibizzy.Ring.DIRECTION.*
-import sg.mas.ibizzy.BubbleInitializer.*
+import sg.mas.ibizzy.renderable.Ring.DIRECTION.*
+import sg.mas.ibizzy.renderable.BubbleInitializer.*
+import sg.mas.ibizzy.renderable.Bubble
+import sg.mas.ibizzy.renderable.BubbleInitializer
+import sg.mas.ibizzy.renderable.Ricochet
+import sg.mas.ibizzy.renderable.Ring
+import java.util.*
 
-class RingsView : View {
+class RingsView : View, Runnable {
+
+    private lateinit var paint: Paint
+    private lateinit var textPaint: Paint
+    private var density: Float = 1f
+    private val ringList = mutableListOf<Ring>()
+    private val bubbleList = Collections.synchronizedList(mutableListOf<Bubble>())
+    private var radius = 200f
+    private lateinit var ringsAnimator: RingsAnimator
+    private var autoReply: Boolean = false
+    private var threadAnimator: Thread? = null
+    private var animateRings = false
 
     @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null,
                               defStyleAttr: Int = 0) : super(context, attrs, defStyleAttr) {
-        init()
-
-    }
-
-    private lateinit var paint: Paint
-
-    private fun init() {
+        density = resources.displayMetrics.density
         paint = Paint()
         paint.color = ContextCompat.getColor(context, R.color.paint88)
         paint.flags = Paint.ANTI_ALIAS_FLAG
+        textPaint = Paint()
         textPaint.color = Color.WHITE
         textPaint.style = Paint.Style.FILL
-        textPaint.textSize = 50f
+        textPaint.textSize = 50f * density / 2
         textPaint.textAlign = Paint.Align.CENTER
-
+        ringsAnimator = RingsAnimator(ringList)
     }
 
-    override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        super.onLayout(changed, l, t, r, b)
-        if (width == 0 || height == 0) {
-            return
-        } else if (firstLayout) {
-            val layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT)
-            layoutParams.width = resources.getDimensionPixelSize(R.dimen.previewseekbar_indicator_width)
-            layoutParams.height = layoutParams.width
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT)
-            firstLayout = false
-            /*val rectF = RectF()
-            rectF.top = (measuredHeight / 2 - (resources.getDimensionPixelSize(R.dimen.previewseekbar_indicator_width) + 10)).toFloat()
-            rectF.bottom = (measuredHeight / 2 + (resources.getDimensionPixelSize(R.dimen.previewseekbar_indicator_width) + 10)).toFloat()
-            rectF.left = (measuredWidth / 2 - (resources.getDimensionPixelSize(R.dimen.previewseekbar_indicator_width) + 10)).toFloat()
-            rectF.right = (measuredWidth / 2 + (resources.getDimensionPixelSize(R.dimen.previewseekbar_indicator_width) + 10)).toFloat()*/
+    override fun onSizeChanged(width: Int, height: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(width, height, oldw, oldh)
+        val layoutParams = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT)
+        layoutParams.width = resources.getDimensionPixelSize(R.dimen.previewseekbar_indicator_width)
+        layoutParams.height = layoutParams.width
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT)
 
-            val x = measuredWidth / 2.toFloat()
-            val y = measuredHeight / 2.toFloat()
+        val x = measuredWidth / 2.toFloat()
+        val y = measuredHeight / 2.toFloat()
 
-            ringList.add(Ring(x, y, END_FORWARD, radius - 10, -10, ContextCompat.getColor(context, R.color.paint1)))
-            ringList.add(Ring(x, y, START_FORWARD, radius + 15, 10, ContextCompat.getColor(context, R.color.paint2)))
-            ringList.add(Ring(x, y, END_BACKWARD, radius, -10, ContextCompat.getColor(context, R.color.paint3)))
+        radius = Math.min(x, y) * 2 / 3
 
-            ringsAnimator = RingsAnimator(ringList)
 
-            BubbleInitializer.create {
-                width { measuredWidth.toFloat() }
-                height { measuredHeight.toFloat() }
-            }
+        ringList.add(Ring(x, y, END_FORWARD, radius - 10 * density, -7 * density, R.color.paint1))
+        ringList.add(Ring(x, y, START_FORWARD, radius + 2 * density, 7 * density, R.color.paint2))
+        ringList.add(Ring(x, y, END_BACKWARD, radius - 10 * density, -10 * density, R.color.paint3))
+
+        BubbleInitializer.create {
+            width { measuredWidth.toFloat() }
+            height { measuredHeight.toFloat() }
         }
     }
-
-    private var autoReply: Boolean = false
-
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
@@ -77,75 +75,74 @@ class RingsView : View {
                     autoReply = !autoReply
                     ringsAnimator.velocity = if (autoReply) 5 else 1
                     if (autoReply) {
+                        val list = mutableListOf<Bubble>()
+                        list.add(Bubble(Side.LEFT, 25f * density, R.color.green))
+                        list.add(Bubble(Side.LEFT, 15f * density, R.color.red))
+                        list.add(Bubble(Side.LEFT, 30f * density, R.color.colorAccent))
+                        list.add(Bubble(Side.TOP, 10f * density, R.color.blue))
+                        list.add(Bubble(Side.TOP, 25f * density, R.color.red))
+                        list.add(Bubble(Side.TOP, 20f * density, R.color.paint1))
+                        list.add(Bubble(Side.RIGHT, 10f * density, R.color.violet))
+                        list.add(Bubble(Side.RIGHT, 25f * density, R.color.pink))
+                        list.add(Bubble(Side.RIGHT, 35f * density, R.color.blue))
+                        list.add(Bubble(Side.BOTTOM, 40f * density, R.color.violet))
+                        list.add(Bubble(Side.BOTTOM, 15f * density, R.color.pink))
+                        list.add(Bubble(Side.BOTTOM, 30f * density, R.color.blue))
 
-                        bubbleList.add(Bubble(Side.LEFT, 25f, R.color.green))
-                        bubbleList.add(Bubble(Side.LEFT, 15f, R.color.red))
-                        bubbleList.add(Bubble(Side.LEFT, 30f, R.color.colorAccent))
-
-                        bubbleList.add(Bubble(Side.TOP, 10f, R.color.blue))
-                        bubbleList.add(Bubble(Side.TOP, 25f, R.color.red))
-                        bubbleList.add(Bubble(Side.TOP, 20f, R.color.paint1))
-                        bubbleList.add(Bubble(Side.RIGHT, 10f, R.color.violet))
-                        bubbleList.add(Bubble(Side.RIGHT, 25f, R.color.pink))
-                        bubbleList.add(Bubble(Side.RIGHT, 35f, R.color.blue))
-                        bubbleList.add(Bubble(Side.BOTTOM, 30f, R.color.red))
-                        bubbleList.add(Bubble(Side.BOTTOM, 20f, R.color.yellow))
-                        bubbleList.add(Bubble(Side.BOTTOM, 35f, R.color.dark_green))
-
-                        bubbleList.add(Bubble(Side.LEFT, 25f, R.color.green))
-                        bubbleList.add(Bubble(Side.LEFT, 15f, R.color.red))
-                        bubbleList.add(Bubble(Side.LEFT, 30f, R.color.colorAccent))
-
-                        bubbleList.add(Bubble(Side.TOP, 10f, R.color.blue))
-                        bubbleList.add(Bubble(Side.TOP, 25f, R.color.red))
-                        bubbleList.add(Bubble(Side.TOP, 20f, R.color.paint1))
-                        bubbleList.add(Bubble(Side.RIGHT, 10f, R.color.violet))
-                        bubbleList.add(Bubble(Side.RIGHT, 25f, R.color.pink))
-                        bubbleList.add(Bubble(Side.RIGHT, 35f, R.color.blue))
-                        bubbleList.add(Bubble(Side.BOTTOM, 30f, R.color.red))
-                        bubbleList.add(Bubble(Side.BOTTOM, 20f, R.color.yellow))
-                        bubbleList.add(Bubble(Side.BOTTOM, 35f, R.color.dark_green))
-
+                        bubbleList.addAll(list)
                     } else {
                         bubbleList.clear()
                     }
                 }
             }
         }
-
         return true
     }
 
-    val textPaint = Paint()
+    fun startRingsAnimation() {
+        animateRings = true
+        threadAnimator?.interrupt()
+        threadAnimator = Thread(this)
+        threadAnimator?.start()
+    }
 
-    val ringList = mutableListOf<Ring>()
-    val bubbleList = mutableListOf<Bubble>()
-    val radius = 200f
+    fun stopRingsAnimation() {
+        animateRings = false
+    }
 
-    lateinit var ringsAnimator: RingsAnimator
+    override fun run() {
+        while (animateRings) {
+            ringsAnimator.nextValue()
+            if (autoReply) {
+                synchronized(bubbleList) {
+                    bubbleList.forEach {
+                        it.nextValue()
+                        Ricochet.check(it, ringList)
+                    }
+                }
+            }
+            Thread.sleep(10)
+            postInvalidate()
+        }
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        ringsAnimator.nextValue()
         ringList.forEach { it.draw(canvas) }
 
         if (autoReply) {
-            bubbleList.forEach {
-                it.nextValue()
-                it.draw(canvas)
+            synchronized(bubbleList) {
+                bubbleList.forEach {
+                    it.draw(canvas)
+                }
             }
-
-            Ricochet.check(bubbleList, ringList)
         }
-        val xPos = canvas.width / 2.toFloat()
-        val yPos = (canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2)
 
-        canvas.drawText("AUTOREPLY", xPos, yPos, textPaint)
-        invalidate()
+        canvas.drawText("AUTOREPLY", canvas.width / 2.toFloat(), (canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2), textPaint)
     }
 
-    class RingsAnimator(val list: List<Ring>) {
+    private class RingsAnimator(val list: List<Ring>) {
         var velocity: Int = 1
         private val range = IntArray(360, { it })
         private var index = 0
@@ -164,7 +161,4 @@ class RingsView : View {
             }
         }
     }
-
-
-    private var firstLayout = true
 }

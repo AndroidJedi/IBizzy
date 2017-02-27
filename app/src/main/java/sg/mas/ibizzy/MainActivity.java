@@ -1,15 +1,27 @@
 package sg.mas.ibizzy;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
-public static Context context;
+    private RingsView ringsView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        context = this;
+        super.onCreate(savedInstanceState);;
         setContentView(R.layout.activity_main);
+        ringsView = (RingsView) findViewById(R.id.ringsView);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ringsView.startRingsAnimation();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ringsView.stopRingsAnimation();
     }
 }
