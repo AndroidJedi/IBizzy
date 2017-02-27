@@ -2,6 +2,8 @@
 
 IBizzy - the app for autoreply or rejecting incoming calls
 
-Key View Video Demonstration
+AutoReplyView:
 
-https://youtu.be/_mrDX31qu4o
+![autoreplyview](https://cloud.githubusercontent.com/assets/16679732/23354996/4f0aa9ea-fcdc-11e6-8753-e17d01b62571.gif)
+
+
